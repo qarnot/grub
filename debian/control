@@ -11,8 +11,8 @@ Build-Depends: debhelper (>= 10~),
  po-debconf,
  help2man,
  texinfo,
- gcc-8,
- gcc-8-multilib [i386 kopensolaris-i386 any-amd64 any-ppc64 any-sparc],
+ gcc-6,
+ gcc-6-multilib [i386 kopensolaris-i386 any-amd64 any-ppc64 any-sparc],
  xfonts-unifont,
  libfreetype6-dev,
  gettext,
@@ -39,7 +39,6 @@ Standards-Version: 3.9.6
 Homepage: https://www.gnu.org/software/grub/
 Vcs-Git: https://salsa.debian.org/grub-team/grub.git
 Vcs-Browser: https://salsa.debian.org/grub-team/grub
-Rules-Requires-Root: no
 
 Package: grub2
 Section: oldlibs
