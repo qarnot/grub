@@ -5,9 +5,11 @@ grub-mkconfig -o /boot/grub/grub.cfg "$@"
 GPG_KEY=/root/setup-scripts/gpg-key
 
 sign(){
-	rm -rf "$1".sig
-	gpg --default-key "$(cat $GPG_KEY)" --detach-sign "$1"
-	echo "Signing $1..."
+	if [ -f $GPG_KEY ]; then
+		rm -rf "$1".sig
+		gpg --default-key "$(cat $GPG_KEY)" --detach-sign "$1"
+		echo "Signing $1..."
+	fi
 }
 
 sign /boot/grub/grub.cfg
