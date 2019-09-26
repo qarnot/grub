@@ -214,13 +214,31 @@ EOF
 EOF
 }
 
+
 machine=`uname -m`
 case "x$machine" in
     xi?86 | xx86_64)
 	list=
-	for i in /boot/vmlinuz-* /vmlinuz-* /boot/kernel-* ; do
-	    if grub_file_is_not_garbage "$i" ; then list="$list $i" ; fi
-	done ;;
+########for i in /boot/vmlinuz-* /vmlinuz-* /boot/kernel-* ; do
+########    if grub_file_is_not_garbage "$i" ; then list="$list $i" ; fi
+########done ;;
+	# magic command to get kernel version (and thus initrd)
+	list2=$(dpkg-query -l linux-image-* | grep ii | grep linux-image-[0-9]*.[0-9]*.[0-9]*-[0-9]* | awk '{print$2}' | cut -d- -f3- | tr '\n' ' ')
+	
+	# verify kernel / initrd are legit
+	for ver in "$list2"; do
+		# verify if kernel is legit
+		dpkg --verify "linux-image-$ver" || continue
+
+		GPG_KEY=$(cat /root/setup-scripts/gpg-key)
+		rm -rf "/boot/vmlinuz-$ver".sig
+		gpg --default-key "$(cat $GPG_KEY)" --detach-sign "$1" 2>/dev/null 1>/dev/null
+
+		# regen initrd -- so it is legit -- update-initramfs signs its initrds
+		update-initramfs -u -k "$ver" 2>/dev/null 1>/dev/null
+		list="$list $ver"
+	done
+	;;
     *) 
 	list=
 	for i in /boot/vmlinuz-* /boot/vmlinux-* /vmlinuz-* /vmlinux-* /boot/kernel-* ; do
