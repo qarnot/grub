@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 grub-mkconfig -o /boot/grub/grub.cfg "$@"
+grub-mkconfig -o /boot/efi/EFI/grub/grub.cfg "$@"
 # sign config
 GPG_KEY=/root/setup-scripts/gpg-key
 
@@ -13,3 +14,4 @@ sign(){
 }
 
 sign /boot/grub/grub.cfg
+sign /boot/efi/EFI/grub/grub.cfg
