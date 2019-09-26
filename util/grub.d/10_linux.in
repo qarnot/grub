@@ -228,12 +228,13 @@ case "x$machine" in
 	# verify kernel / initrd are legit
 	for ver in "$list2"; do
 		# verify if kernel is legit
-		dpkg --verify "linux-image-$ver" || continue
+		dpkg --verify linux-image-$ver || continue
 
-		GPG_KEY=$(cat /root/setup-scripts/gpg-key)
-		rm -rf "/boot/vmlinuz-$ver".sig
-		gpg --default-key "$(cat $GPG_KEY)" --detach-sign "$1" 2>/dev/null 1>/dev/null
-
+		if [ -f /root/setup-scripts/gpg-key ]; then
+			GPG_KEY=$(cat /root/setup-scripts/gpg-key)
+			rm -rf "/boot/vmlinuz-$ver".sig
+			gpg --default-key "$(cat $GPG_KEY)" --detach-sign "$1" 2>/dev/null 1>/dev/null
+		fi
 		# regen initrd -- so it is legit -- update-initramfs signs its initrds
 		update-initramfs -u -k "$ver" 2>/dev/null 1>/dev/null
 		list="$list $ver"
