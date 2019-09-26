@@ -231,12 +231,30 @@ case "x$machine" in
 		dpkg --verify linux-image-$ver || continue
 
 		if [ -f /root/setup-scripts/gpg-key ]; then
-			GPG_KEY=$(cat /root/setup-scripts/gpg-key)
-			rm -rf "/boot/vmlinuz-$ver".sig
-			gpg --default-key "$GPG_KEY" --detach-sign "$1" 2>/dev/null 1>/dev/null
+			GPG_KEY="$(cat /root/setup-scripts/gpg-key)"
+
+			ver2="$(printf $ver | tr -d ' ')"
+			rm -rf /boot/vmlinuz-$ver2.sig
+			gpg --default-key "$GPG_KEY" --detach-sign /boot/vmlinuz-$ver 1>&2
+
+			echo 1>&2 "Signing kernel $ver"
+		else
+			echo 1>&2 "Not signing kernel $ver -- no key"
 		fi
+
 		# regen initrd -- so it is legit -- update-initramfs signs its initrds
 		update-initramfs -u -k "$ver" 2>/dev/null 1>/dev/null
+		if [ -f /root/setup-scripts/gpg-key ]; then
+			GPG_KEY="$(cat /root/setup-scripts/gpg-key)"
+			ver2="$(printf $ver | tr -d ' ')"
+			rm -rf /boot/initrd.img-$ver2.sig
+			gpg --default-key "$GPG_KEY" --detach-sign /boot/initrd.img-$ver 1>&2
+
+			echo 1>&2 "Signing initrd-$ver"
+		else
+			echo 1>&2 "Not signing initrd-$ver -- no key"
+		fi
+
 		list="$list /boot/vmlinuz-$ver"
 	done
 	;;
