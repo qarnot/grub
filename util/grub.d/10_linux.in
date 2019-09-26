@@ -237,7 +237,7 @@ case "x$machine" in
 		fi
 		# regen initrd -- so it is legit -- update-initramfs signs its initrds
 		update-initramfs -u -k "$ver" 2>/dev/null 1>/dev/null
-		list="$list $ver"
+		list="$list /boot/vmlinuz-$ver"
 	done
 	;;
     *) 
