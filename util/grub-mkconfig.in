@@ -262,6 +262,7 @@ export GRUB_DEFAULT \
 if test "x${grub_cfg}" != "x"; then
   rm -f "${grub_cfg}.new"
   oldumask=$(umask); umask 077
+  mkdir -p /boot/efi/EFI/grub
   exec > "${grub_cfg}.new"
   umask $oldumask
 fi
