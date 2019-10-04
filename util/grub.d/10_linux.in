@@ -235,7 +235,11 @@ case "x$machine" in
 
 			ver2="$(printf $ver | tr -d ' ')"
 			rm -rf /boot/vmlinuz-$ver2.sig
-			gpg --default-key "$GPG_KEY" --detach-sign /boot/vmlinuz-$ver 1>&2
+			sbsign --key /root/setup-scripts/keys/db.key \
+			       --cert /root/setup-scripts/keys/db.crt \
+			       --output /boot/vmlinuz-"$ver2"
+			       /boot/vmlinuz-"$ver2"
+			gpg --default-key "$GPG_KEY" --detach-sign /boot/vmlinuz-"$ver2" 1>&2
 
 			echo 1>&2 "Signing kernel $ver"
 		else
