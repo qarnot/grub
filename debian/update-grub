@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
-grub-mkconfig -o /boot/grub/grub.cfg "$@"
-grub-mkconfig -o /boot/efi/EFI/grub/grub.cfg "$@"
+grub-mkconfig -o /boot/efi/grub.cfg "$@"
+
 # sign config
 GPG_KEY=/root/setup-scripts/gpg-key
 
@@ -10,8 +10,9 @@ sign(){
 		rm -rf "$1".sig
 		gpg --default-key "$(cat $GPG_KEY)" --detach-sign "$1"
 		echo "Signing $1..."
+	else
+		echo "Not GPG key, not signing $1..."
 	fi
 }
 
-sign /boot/grub/grub.cfg
-sign /boot/efi/EFI/grub/grub.cfg
+sign /boot/efi/grub.cfg
