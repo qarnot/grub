@@ -186,11 +186,11 @@ EOF
   fi
   if test -d /sys/firmware/efi && test -e "${linux}.efi.signed"; then
     sed "s/^/$submenu_indentation/" << EOF
-	linux	${rel_dirname}/${basename}.efi.signed root=${linux_root_device_thisversion} ro ${args}
+	linuxefi	${rel_dirname}/${basename}.efi.signed root=${linux_root_device_thisversion} ro ${args}
 EOF
   else
     sed "s/^/$submenu_indentation/" << EOF
-	linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args}
+	linuxefi	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args}
 EOF
   fi
   if test -n "${initrd}" ; then
@@ -206,7 +206,7 @@ EOF
       initrd_path="${initrd_path} ${rel_dirname}/${i}"
     done
     sed "s/^/$submenu_indentation/" << EOF
-	initrd	$(echo $initrd_path)
+	initrdefi	$(echo $initrd_path)
 EOF
   fi
   sed "s/^/$submenu_indentation/" << EOF
