@@ -1,6 +1,12 @@
 #!/bin/sh
 set -e
-grub-mkconfig -o /boot/efi/grub.cfg "$@"
+CFG_PATH=""
+if [ -e /sys/firmware/efi/efivars ]; then
+	CFG_PATH="/boot/efi/grub.cfg"
+else
+	CFG_PATH="/boot/grub/grub.cfg"
+fi
+grub-mkconfig -o "$CFG_PATH" "$@"
 
 # sign config
 GPG_KEY=/root/setup-scripts/gpg-key
@@ -15,4 +21,4 @@ sign(){
 	fi
 }
 
-sign /boot/efi/grub.cfg
+sign "$CFG_PATH"
