@@ -238,7 +238,7 @@ case "x$machine" in
 			sbsign --key /root/setup-scripts/keys/db.key \
 			       --cert /root/setup-scripts/keys/db.crt \
 			       --output /boot/vmlinuz-"$ver2" \
-			       /boot/vmlinuz-"$ver2"
+			       /boot/vmlinuz-"$ver2" >&2
 			gpg --default-key "$GPG_KEY" --detach-sign /boot/vmlinuz-"$ver2" 1>&2
 
 			echo 1>&2 "Signing kernel $ver"
@@ -252,6 +252,11 @@ case "x$machine" in
 			GPG_KEY="$(cat /root/setup-scripts/gpg-key)"
 			ver2="$(printf $ver | tr -d ' ')"
 			rm -rf /boot/initrd.img-$ver2.sig
+			sbsign --key /root/setup-scripts/keys/db.key \
+			       --cert /root/setup-scripts/keys/db.crt \
+			       --output /boot/vmlinuz-"$ver2" \
+			       /boot/vmlinuz-"$ver2" >&2
+
 			gpg --default-key "$GPG_KEY" --detach-sign /boot/initrd.img-$ver 1>&2
 
 			echo 1>&2 "Signing initrd-$ver"
